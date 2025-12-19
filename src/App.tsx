@@ -9,9 +9,9 @@ import { Account } from "./components/Account";
 import { Menu } from "lucide-react";
 
 function App() {
-  const isLogged = false;
+  const isLogged = true;
 
-  if (isLogged) {
+  if (!isLogged) {
     return <Login />;
   }
 
