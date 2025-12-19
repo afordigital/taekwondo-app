@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Header } from "./Header";
-import { BottomNav } from "./BottomNav";
-import { MenuMobile } from "./MenuMobile";
+import { Header } from "../components/Header";
+import { BottomNav } from "../components/BottomNav";
+import { MenuMobile } from "../components/MenuMobile";
 
 export const MainLayout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -47,16 +47,16 @@ const SimplePlayer = () => {
           <track default kind="chapters" src="/chapters/won-hyo.vtt" />
         </video>
         <MediaControlBar>
-          <MediaPlayButton></MediaPlayButton>
-          <MediaTimeRange></MediaTimeRange>
-          <MediaTimeDisplay showDuration></MediaTimeDisplay>
-          <MediaPlaybackRateButton></MediaPlaybackRateButton>
-          <MediaMuteButton></MediaMuteButton>
+          <MediaPlayButton/>
+          <MediaTimeRange/>
+          <MediaTimeDisplay showDuration/>
+          <MediaPlaybackRateButton/>
+          <MediaMuteButton/>
         </MediaControlBar>
       </MediaController>
-      <button onClick={() => goToMovement("prev")}>Anterior movimiento</button>
+      <button type="button" onClick={() => goToMovement("prev")}>Anterior movimiento</button>
       <p>Won hyo - Movimiento {currentMovement + 1}</p>
-      <button onClick={() => goToMovement("next")}>Siguiente movimiento</button>
+      <button type="button" onClick={() => goToMovement("next")}>Siguiente movimiento</button>
     </>
   );
 };
