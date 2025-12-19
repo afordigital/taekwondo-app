@@ -1,20 +1,45 @@
-import { useState } from "react";
-import { Button } from "../common/Button";
+import { useState } from 'react';
+import { Button } from '../common/Button';
+import { isValidEmail } from '../utils/isValidEmail';
+import { Eye, EyeOff } from 'lucide-react';
 
-export const Login = () => {
+type LoginProps = {
+  onLoginSuccess: () => void;
+};
+
+export const Login = ({ onLoginSuccess }: LoginProps) => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const isFormValid =
+    isValidEmail(formData.email) && formData.password.length > 0;
 
   const signIn = () => {
-    console.log("signIn");
+    if (
+      formData.email === 'example@example.com' &&
+      formData.password === 'example'
+    ) {
+      onLoginSuccess();
+    } else {
+      alert('Credenciales incorrectas. Usa example@example.com / example');
+    }
   };
 
   return (
-    <section className="font-manrope w-screen flex item-center justify-center h-screen min-h-dvh bg-[url('/imgs/bg-login.webp')] bg-no-repeat bg-size-[150%] bg-position-[center_top_-5rem]">
+    <section className="font-manrope w-screen flex item-center justify-center h-screen min-h-dvh bg-[url('/imgs/bg-login.webp')] bg-no-repeat bg-size-[150%] bg-position-[calc(50%+30px)_center]">
       <div className="flex items-center justify-center w-full h-full">
-        <form className="flex h-fit w-[90%] flex-col items-center justify-center gap-4 bg-white border border-gray-300 px-4 py-6 rounded-md">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (isFormValid) {
+              signIn();
+            }
+          }}
+          className="flex h-fit w-[90%] flex-col items-center justify-center gap-4 bg-white border border-gray-300 px-4 py-6 rounded-md"
+        >
           <div className="flex flex-col items-center w-full gap-2">
             <img src="/imgs/logo.webp" width={72} alt="logo escuela" />
             <h1 className="text-3xl font-bold">Iniciar sesión</h1>
@@ -31,22 +56,36 @@ export const Login = () => {
               onChange={(event) => {
                 setFormData({ ...formData, email: event.target.value });
               }}
+              value={formData.email}
             />
           </label>
-          <label className="w-full">
+          <label className="relative w-full">
             <p className="sr-only">Contraseña</p>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="Contraseña"
-              className="flex items-center w-full h-12 px-4 text-gray-900 border border-gray-300 rounded-md active:border-gray-400"
+              className="flex items-center w-full h-12 px-4 pr-12 text-gray-900 border border-gray-300 rounded-md active:border-gray-400"
               onChange={(event) => {
                 setFormData({ ...formData, password: event.target.value });
               }}
+              value={formData.password}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute text-gray-500 -translate-y-1/2 right-3 top-1/2 hover:text-gray-700 focus:outline-none"
+              aria-label={
+                showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              }
+            >
+              {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+            </button>
           </label>
-          <Button handleClick={signIn}>Iniciar sesión</Button>
+          <Button handleClick={signIn} type='submit' disabled={!isFormValid}>
+            Iniciar sesión
+          </Button>
           <footer>
-            ¿No tienes cuenta?{" "}
+            ¿No tienes cuenta?{' '}
             <span className="underline underline-offset-2">Pídela aquí</span>
           </footer>
         </form>

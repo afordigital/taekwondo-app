@@ -15,6 +15,15 @@ body {
   margin: 0;
 }
 
+/* Safe area insets para móviles (iOS notch y home indicator) */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 @theme {
   --color-primary-500: #800000;
   --color-phover-500: #6b0000;

@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export const Header = ({ onMenuToggle }: HeaderProps) => {
   return (
-    <header className="relative z-40 flex items-center justify-between flex-none w-full p-2 bg-white shadow-sm">
+    <header className="relative z-40 flex items-center justify-between flex-none w-full px-4 py-2 bg-white shadow-sm safe-area-top">
       <a href="/">
         <img src="/imgs/logo.webp" width={72} alt="logo escuela" />
       </a>

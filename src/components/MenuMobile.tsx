@@ -1,5 +1,6 @@
-import { Book, Paperclip, User, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Book, Paperclip, User, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from '../common/Button';
 
 type NavItem = {
   to: string;
@@ -10,19 +11,20 @@ type NavItem = {
 type MenuMobileProps = {
   isOpen: boolean;
   onClose: () => void;
+  onLogout: () => void;
 };
 
-export const MenuMobile = ({ isOpen, onClose }: MenuMobileProps) => {
+export const MenuMobile = ({ isOpen, onClose, onLogout }: MenuMobileProps) => {
   const location = useLocation();
 
   const navItems: NavItem[] = [
     {
-      to: "/",
+      to: '/',
       icon: <Book />,
-      label: "Exámenes",
+      label: 'Exámenes',
     },
     {
-      to: "/tules",
+      to: '/tules',
       icon: (
         <svg
           width="24"
@@ -40,33 +42,34 @@ export const MenuMobile = ({ isOpen, onClose }: MenuMobileProps) => {
           <path d="M2 12l10 5 10-5"></path>
         </svg>
       ),
-      label: "Tules",
+      label: 'Tules',
     },
     {
-      to: "/theory",
+      to: '/theory',
       icon: <Paperclip />,
-      label: "Teoría",
+      label: 'Teoría',
     },
     {
-      to: "/account",
+      to: '/account',
       icon: <User />,
-      label: "Perfil",
+      label: 'Perfil',
     },
   ];
 
   return (
     <div
-      className={`fixed inset-0 bg-white transform transition-transform duration-300 ease-in-out z-50 ${
-        isOpen ? "translate-y-0" : "-translate-y-full"
+      className={`fixed inset-0 bg-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <header className="flex items-center justify-between flex-none w-full p-2 border-b">
+      <header className="flex items-center justify-between flex-none w-full p-2 border-b safe-area-top">
         <a href="/">
           <img src="/imgs/logo.webp" width={72} alt="logo escuela" />
         </a>
 
         <button
           onClick={onClose}
+          type='button'
           className="p-2 transition-colors duration-200 rounded-lg hover:bg-gray-100"
           aria-label="Cerrar menú"
         >
@@ -74,7 +77,7 @@ export const MenuMobile = ({ isOpen, onClose }: MenuMobileProps) => {
         </button>
       </header>
 
-      <nav className="flex flex-col py-6">
+      <nav className="flex flex-col flex-1 py-6 overflow-y-auto">
         {navItems.map((item, index) => {
           const isActive = location.pathname === item.to;
           return (
@@ -84,13 +87,13 @@ export const MenuMobile = ({ isOpen, onClose }: MenuMobileProps) => {
               onClick={onClose}
               className={`flex items-center gap-4 px-6 py-4 transition-all duration-200 ${
                 isActive
-                  ? "bg-primary/10 text-primary border-l-4 border-primary"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? 'bg-primary/10 text-primary border-l-4 border-primary'
+                  : 'text-gray-700 hover:bg-gray-50'
               }`}
               style={{
                 animation: isOpen
                   ? `slideIn 0.3s ease-out ${index * 0.05}s both`
-                  : "none",
+                  : 'none',
               }}
             >
               <span className="shrink-0">{item.icon}</span>
@@ -100,11 +103,15 @@ export const MenuMobile = ({ isOpen, onClose }: MenuMobileProps) => {
         })}
       </nav>
 
+      <div className="flex-none px-6 pt-4 pb-6 border-t border-gray-200 safe-area-bottom">
+        <Button handleClick={onLogout}>Cerrar sesión</Button>
+      </div>
+
       <style>{`
         @keyframes slideIn {
           from {
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(20px);
           }
           to {
             opacity: 1;

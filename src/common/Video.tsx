@@ -43,8 +43,9 @@ const SimplePlayer = () => {
       <MediaController
         ref={mediaControllerRef as unknown as React.Ref<MediaControllerElement>}
       >
-        <video slot="media" src="/videos/won-hyo.mp4" preload="auto">
-          <track default kind="chapters" src="/chapters/won-hyo.vtt" />
+       {/* biome-ignore lint/a11y/useMediaCaption: no language */}
+       <video slot="media" src="/videos/won-hyo.mp4" preload="auto">
+          <track default label="Capítulos" kind="chapters" srcLang="es" src="/chapters/won-hyo.vtt" />
         </video>
         <MediaControlBar>
           <MediaPlayButton/>

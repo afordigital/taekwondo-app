@@ -1,6 +1,6 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { useRef, useEffect, useState, type ReactNode } from "react";
-import { Book, Paperclip, User } from "lucide-react";
+import { NavLink, useLocation } from 'react-router-dom';
+import { useRef, useEffect, useState, type ReactNode } from 'react';
+import { Book, Paperclip, User } from 'lucide-react';
 
 type IndicatorStyle = {
   left: number;
@@ -29,12 +29,12 @@ export const BottomNav = ({ isHidden = false }: BottomNavProps) => {
 
   const navItems: NavItem[] = [
     {
-      to: "/",
+      to: '/',
       icon: <Book />,
-      label: "Exámenes",
+      label: 'Exámenes',
     },
     {
-      to: "/tules",
+      to: '/tules',
       icon: (
         <svg
           width="24"
@@ -52,17 +52,17 @@ export const BottomNav = ({ isHidden = false }: BottomNavProps) => {
           <path d="M2 12l10 5 10-5"></path>
         </svg>
       ),
-      label: "Tules",
+      label: 'Tules',
     },
     {
-      to: "/theory",
+      to: '/theory',
       icon: <Paperclip />,
-      label: "Teoría",
+      label: 'Teoría',
     },
     {
-      to: "/account",
+      to: '/account',
       icon: <User />,
-      label: "Perfil",
+      label: 'Perfil',
     },
   ];
 
@@ -83,18 +83,17 @@ export const BottomNav = ({ isHidden = false }: BottomNavProps) => {
     };
 
     updateIndicator();
-    window.addEventListener("resize", updateIndicator);
+    window.addEventListener('resize', updateIndicator);
 
-    return () => window.removeEventListener("resize", updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
   }, [location.pathname]);
 
   return (
     <nav
       ref={navRef}
       className={`fixed ${
-        isHidden ? "translate-y-full" : "translate-y-0"
-      } bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-50`}
-      role="navigation"
+        isHidden ? 'translate-y-full' : 'translate-y-0'
+      } bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-50 safe-area-bottom`}
       aria-label="Navegación principal"
     >
       <div
@@ -105,26 +104,29 @@ export const BottomNav = ({ isHidden = false }: BottomNavProps) => {
         }}
       />
 
-      <ul className="flex items-center justify-around h-16 max-w-2xl p-0 m-0 mx-auto list-none">
+      <ul className="flex items-center h-16 max-w-2xl p-0 m-0 mx-auto list-none">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
 
           return (
-            <li key={item.to}>
+            <li
+              key={item.to}
+              className="flex items-center justify-center flex-1"
+            >
               <NavLink
                 ref={(el) => {
                   buttonRefs.current[item.to] = el;
                 }}
                 to={item.to}
                 className={`
-                  flex flex-col items-center justify-center gap-1 px-4 py-2 
-                  w-24 rounded-lg transition-colors duration-200
+                  flex flex-col items-center justify-center gap-1 w-full py-2 
+                  rounded-lg transition-colors duration-200
                   hover:bg-gray-100 focus:outline-none focus-visible:ring-2 
                   focus-visible:ring-primary-500 focus-visible:ring-offset-2
-                  ${isActive ? "text-primary-500" : "text-gray-500"}
+                  ${isActive ? 'text-primary-500' : 'text-gray-500'}
                 `}
                 aria-label={item.label}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive ? 'page' : undefined}
               >
                 <span className="flex items-center justify-center w-6 h-6">
                   {item.icon}
