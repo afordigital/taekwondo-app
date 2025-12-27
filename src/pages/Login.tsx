@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../common/Button';
 import { isValidEmail } from '../utils/isValidEmail';
 import { Eye, EyeOff } from 'lucide-react';
+import { authClient } from '../../lib/auth-client';
 
 type LoginProps = {
   onLoginSuccess: () => void;
@@ -13,18 +14,40 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
     password: '',
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isFormValid =
     isValidEmail(formData.email) && formData.password.length > 0;
 
-  const signIn = () => {
-    if (
-      formData.email === 'example@example.com' &&
-      formData.password === 'example'
-    ) {
-      onLoginSuccess();
-    } else {
-      alert('Credenciales incorrectas. Usa example@example.com / example');
+  const signIn = async () => {
+    if (!isFormValid) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await authClient.signIn.email({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (result.error) {
+        setError(
+          result.error.message ||
+            'Credenciales incorrectas. Inténtalo de nuevo.'
+        );
+      } else {
+        onLoginSuccess();
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Ha ocurrido un error al iniciar sesión. Inténtalo de nuevo.'
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,8 +78,10 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
               placeholder="Correo electrónico"
               onChange={(event) => {
                 setFormData({ ...formData, email: event.target.value });
+                setError(null);
               }}
               value={formData.email}
+              disabled={isLoading}
             />
           </label>
           <label className="relative w-full">
@@ -67,8 +92,10 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
               className="flex items-center w-full h-12 px-4 pr-12 text-gray-900 border border-gray-300 rounded-md active:border-gray-400"
               onChange={(event) => {
                 setFormData({ ...formData, password: event.target.value });
+                setError(null);
               }}
               value={formData.password}
+              disabled={isLoading}
             />
             <button
               type="button"
@@ -77,12 +104,22 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
               aria-label={
                 showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
               }
+              disabled={isLoading}
             >
               {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
             </button>
           </label>
-          <Button handleClick={signIn} type='submit' disabled={!isFormValid}>
-            Iniciar sesión
+          {error && (
+            <div className="w-full p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              {error}
+            </div>
+          )}
+          <Button
+            handleClick={signIn}
+            type="submit"
+            disabled={!isFormValid || isLoading}
+          >
+            {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Button>
           <footer>
             ¿No tienes cuenta?{' '}

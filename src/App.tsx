@@ -7,27 +7,68 @@ import { Tules } from './pages/Tules';
 import { Theory } from './pages/Theory';
 import { Account } from './pages/Account';
 import { MainLayout } from './pages/MainLayout';
+import { authClient } from '../lib/auth-client';
 
 function App() {
-  const [isLogged, setIsLogged] = useState(() => {
-    const saved = localStorage.getItem('isLogged');
-    return saved === 'true';
+  const [session, setSession] = useState<unknown>(() => {
+    const stored = localStorage.getItem('authSession');
+    return stored ? JSON.parse(stored) : null;
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('isLogged', isLogged.toString());
-  }, [isLogged]);
+    const checkSession = async () => {
+      try {
+        const sessionData = await authClient.getSession();
+        const currentSession = sessionData.data?.session || null;
+        setSession(currentSession);
 
-  const handleLoginSuccess = () => {
-    setIsLogged(true);
+        if (currentSession) {
+          localStorage.setItem('authSession', JSON.stringify(currentSession));
+        } else {
+          localStorage.removeItem('authSession');
+        }
+      } catch {
+        setSession(null);
+        localStorage.removeItem('authSession');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  const handleLoginSuccess = async () => {
+    try {
+      const sessionData = await authClient.getSession();
+      const currentSession = sessionData.data?.session || null;
+      setSession(currentSession);
+
+      if (currentSession) {
+        localStorage.setItem('authSession', JSON.stringify(currentSession));
+      }
+    } catch {
+      setSession(null);
+      localStorage.removeItem('authSession');
+    }
   };
 
-  const handleLogout = () => {
-    setIsLogged(false);
-    localStorage.removeItem('isLogged');
+  const handleLogout = async () => {
+    await authClient.signOut();
+    setSession(null);
+    localStorage.removeItem('authSession');
   };
 
-  if (!isLogged) {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-screen h-screen">
+        <div className="text-lg">Cargando...</div>
+      </div>
+    );
+  }
+
+  if (!session) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
